@@ -1,0 +1,12 @@
+favorite:
+   drink: coffee
+   food: pizza
+technology:
+   container: docker
+   container-cluser: kubernetes
+namespace: helm
+pizzaToppings:
+  - mushrooms
+  - cheese
+  - peppers
+  - onions

@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $.Release.Name }}-configmap
+  namespace: {{ $.Values.namespace }}
+  {{- template "mychart.labels" . }}
+data:
+  myvalue: "Hello World"
+  {{- $release := $.Release.Name }}
+  {{- with .Values.favorite }}
+  drink: {{ .drink | default "tea" | quote }}
+  food: {{ .food | upper | quote }}
+  release: {{ $release | title | quote }}
+  {{- end }}
+  {{- range $key, $val := $.Values.technology }}
+  {{ $key }}: {{ $val | quote }}
+  {{- end }}
+  {{- if eq $.Values.favorite.drink "coffee" }}
+  mug: true
+  {{- end }}
+  toppings: |-
+    {{- range $.Values.pizzaToppings }}
+    - {{ . | title | quote }}
+    {{- end }}
+  toppings123: |-
+    {{- range $index,$toppings := $.Values.pizzaToppings }}
+     {{ $index }} {{ $toppings }}
+    {{- end }}
+
