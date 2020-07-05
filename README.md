@@ -1,11 +1,7 @@
 # helmchart
 This repository is for Learning purpose , content has been taken from https://helm.sh/
 
-Some points to be notes
-
-URL for Template function : https://masterminds.github.io/sprig/
-
-Values.yaml used for below examples
+Prerequisite: Values.yaml used for all below examples
 ===================
 ```yaml
 favorite:
@@ -22,8 +18,71 @@ pizzaToppings:
   - onions
 ```
 
+***Concepts starting below***
+===============
+Built-in Objects
+=================
+The built-in values always begin with a capital letter. This is in keeping with Go's naming convention.
+```bash
+--> Release
+--> Values
+--> Chart
+--> Files
+--> Capabilities
+--> Template
+```
+## Release
+```bash
+Release: This object describes the release itself. It has several objects inside of it:
+Release.Name: The release name
+Release.Namespace: The namespace to be released into (if the manifest doesn’t override)
+Release.IsUpgrade: This is set to true if the current operation is an upgrade or rollback.
+Release.IsInstall: This is set to true if the current operation is an install.
+Release.Revision: The revision number for this release. On install, this is 1, and it is incremented with each upgrade and rollback.
+Release.Service: The service that is rendering the present template. On Helm, this is always Helm.
+```
+## Values
+```bash
+Values: Values passed into the template from the values.yaml file and from user-supplied files. By default, Values is empty.
+```
+## Chart
+```bash
+Chart: The contents of the Chart.yaml file. Any data in Chart.yaml will be accessible here. For example {{ .Chart.Name }}-{{ .Chart.Version }} will print out the mychart-0.1.0.
+The available fields are listed in the Charts Guide (https://helm.sh/docs/topics/charts/#the-chartyaml-file)
+```
+## Files
+```bash
+Files: This provides access to all non-special files in a chart. While you cannot use it to access templates, you can use it to access other files in the chart. See the section Accessing Files for more.
+Files.Get is a function for getting a file by name (.Files.Get config.ini)
+Files.GetBytes is a function for getting the contents of a file as an array of bytes instead of as a string. This is useful for things like images.
+Files.Glob is a function that returns a list of files whose names match the given shell glob pattern.
+Files.Lines is a function that reads a file line-by-line. This is useful for iterating over each line in a file.
+Files.AsSecrets is a function that returns the file bodies as Base 64 encoded strings.
+Files.AsConfig is a function that returns file bodies as a YAML map.
+```
+## Capabilities
+```bash
+Capabilities: This provides information about what capabilities the Kubernetes cluster supports.
+Capabilities.APIVersions is a set of versions.
+Capabilities.APIVersions.Has $version indicates whether a version (e.g., batch/v1) or resource (e.g., apps/v1/Deployment) is available on the cluster.
+Capabilities.KubeVersion and Capabilities.KubeVersion.Version is the Kubernetes version.
+Capabilities.KubeVersion.Major is the Kubernetes major version.
+Capabilities.KubeVersion.Minor is the Kubernetes minor version.
+```
+## Template
+```bash
+Template: Contains information about the current template that is being executed
+Name: A namespaced file path to the current template (e.g. mychart/templates/mytemplate.yaml)
+BasePath: The namespaced path to the templates directory of the current chart (e.g. mychart/templates).
+```
+
+
 Template Functions and Pipelines
 ===================================
+
+> Important URL for Template function :
+> https://masterminds.github.io/sprig/
+
 ```yaml
 apiVersion: v1
 kind: ConfigMap
@@ -83,15 +142,15 @@ Both name and namespace are optional and can be passed as an empty string ("").
 
 The following combination of parameters are possible:
 
-```yaml
-Behavior								                                Lookup function
---------								                                ---------------
-kubectl get pod mypod -n mynamespace	                  lookup "v1" "Pod" "mynamespace" "mypod"
-kubectl get pods -n mynamespace			                    lookup "v1" "Pod" "mynamespace" ""
-kubectl get pods --all-namespaces		                    lookup "v1" "Pod" "" ""
-kubectl get namespace mynamespace		                    lookup "v1" "Namespace" "" "mynamespace"
-kubectl get namespaces					                        lookup "v1" "Namespace" "" ""
-```
+|Behavior|  Lookup function|
+|--|--|
+| `kubectl get pod mypod -n mynamespace` | `lookup "v1" "Pod" "mynamespace" "mypod"` |
+| `kubectl get pods -n mynamespace` | `lookup "v1" "Pod" "mynamespace" ""` | 
+| `kubectl get pods --all-namespaces` | `lookup "v1" "Pod" "" ""` |
+|`kubectl get namespace mynamespace`  | `lookup "v1" "Namespace" "" "mynamespace"` |
+| `kubectl get namespaces` | `lookup "v1" "Namespace" "" ""` |
+
+
 When lookup returns an object, it will return a dictionary. This dictionary can be further navigated to extract specific values.
 The following example will return the annotations present for the mynamespace object:
 ```bash
