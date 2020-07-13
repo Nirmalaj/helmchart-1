@@ -14,6 +14,8 @@
 2. helm search repo searches the repositories that you have added to your local helm client (with helm repo add). This search is done over local data, and no public network connection is needed.
 ```bash
 		$ helm repo add brigade https://brigadecore.github.io/charts
+		$ helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+		$ helm repo add bitnami https://charts.bitnami.com/bitnami
 		"brigade" has been added to your repositories
 		$ helm search repo brigade
 		NAME                          CHART VERSION APP VERSION DESCRIPTION
