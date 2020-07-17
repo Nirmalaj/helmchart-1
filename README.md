@@ -573,11 +573,9 @@ data:
 {{ include "mychart.app" . | indent 2 }}
 ```
 
-
-
-
-
-
+Important Points to remember
+=============================
+*The install order of Kubernetes types is given by the enumeration InstallOrder in kind_sorter.go (see the Helm source file https://github.com/helm/helm/blob/484d43913f97292648c867b56768775a55e4bba6/pkg/releaseutil/kind_sorter.go).
 
 
 
