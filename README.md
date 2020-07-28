@@ -1,3 +1,5 @@
+This repository is for Learning purpose , content has been taken from https://helm.sh/
+
 *********CONCEPTS & COMMANDS***************
 ====================
 'helm search': Finding Charts
